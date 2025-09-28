@@ -25,14 +25,6 @@
 }
 ```
 
-## 语言检测
-
-- `GET /api/tools/detect?text=...`
-- 响应：
-```json
-{ "detectedLang": "zh", "confidence": 0.99, "provider": "whatlang" }
-```
-
 ## JSON 格式化
 
 - `POST /api/tools/json/format`
@@ -62,4 +54,3 @@
 ```json
 { "code": "BadRequest", "message": "invalid payload", "details": null }
 ```
-

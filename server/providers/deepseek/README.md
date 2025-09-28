@@ -32,7 +32,7 @@
 
 ## 语言方向
 
-`source` 为 `auto` 时，先走语言检测模块得到 `zh|en`，`target` 为另一种语言；也可由前端直接指定。
+`source` 为 `auto` 时，由翻译模块内置的自动检测推断 `zh|en`，`target` 为另一种语言；也可由前端直接指定。
 
 ## 错误分类
 
@@ -42,4 +42,3 @@
 ## 缓存键
 
 `hash("deepseek" + source + target + text)`，TTL 由 `CACHE_TTL_SECONDS` 控制。
-

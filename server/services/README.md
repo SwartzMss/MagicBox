@@ -3,14 +3,9 @@
 ## 缓存（moka）
 
 - 键：`hash(provider + source + target + text)`
-- 值：翻译结果字符串或检测结果对象
+- 值：翻译结果字符串（可含内部检测信息）
 - TTL：`CACHE_TTL_SECONDS`
 - 容量：`CACHE_MAX_ENTRIES`
-
-## 限流（tower-governor）
-
-- 策略：按 IP 每分钟 `RATE_LIMIT_PER_MINUTE`
-- 路由级别应用在 `/api/tools/*`
 
 ## 日志与追踪（tracing）
 
@@ -21,4 +16,3 @@
 
 - 上游调用（DeepSeek）：请求超时 5s，指数退避重试 3 次
 - 对客户端：明确 `Retry-After`（当可重试时）
-

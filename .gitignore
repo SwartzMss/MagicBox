@@ -1,0 +1,31 @@
+# General
+.DS_Store
+Thumbs.db
+*.log
+logs/
+
+# Env files
+.env
+.env.*
+server/.env
+server/.env.*
+
+# Rust
+target/
+server/target/
+
+# Node/Web (future web app)
+node_modules/
+web/node_modules/
+dist/
+build/
+.next/
+.turbo/
+
+# IDE/editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*.tmp
+~*
