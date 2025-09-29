@@ -5,21 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MagicBox — 工具箱</title>
     <style>
-      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; padding: 24px; line-height: 1.5; }
+      :root { color-scheme: light dark; }
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; line-height: 1.5; background: #0b1021; color: #e5e7eb; }
+      header { position: sticky; top: 0; background: #0f172a; border-bottom: 1px solid #1f2937; padding: 12px 20px; z-index: 10; }
+      header .brand { font-weight: 700; }
+      main { padding: 20px; max-width: 1100px; margin: 0 auto; }
       h1 { margin: 0 0 16px; font-size: 20px; }
-      section { border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+      section { border: 1px solid #1f2937; border-radius: 10px; padding: 16px; margin-bottom: 16px; background: #0f172a; box-shadow: 0 5px 20px rgba(0,0,0,.25); }
       label { display:block; margin: 8px 0 4px; font-weight: 600; }
-      textarea, input, select { width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; }
-      button { margin-top: 8px; padding: 8px 12px; border: 1px solid #1d4ed8; background: #2563eb; color: #fff; border-radius: 6px; cursor: pointer; }
+      textarea, input, select { width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #334155; background: #0b1226; color: #e5e7eb; border-radius: 8px; font-family: inherit; }
+      button { margin-top: 8px; padding: 8px 12px; border: 1px solid #1d4ed8; background: #2563eb; color: #fff; border-radius: 8px; cursor: pointer; }
       button:disabled { opacity: .6; cursor: not-allowed; }
       pre { background: #0b1021; color: #e5e7eb; padding: 12px; border-radius: 8px; overflow: auto; }
       .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-      .muted { color:#6b7280; font-size: 12px; }
+      .muted { color:#9ca3af; font-size: 12px; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+      a { color: #93c5fd; text-decoration: none; }
+      a:hover { text-decoration: underline; }
     </style>
   </head>
   <body>
-    <h1>MagicBox 工具箱（本地静态页面）</h1>
-    <p class="muted">此页面由服务端静态托管。API 基础路径：<code>/api</code></p>
+    <header>
+      <div class="brand">MagicBox</div>
+    </header>
+    <main>
+      <h1>工具箱（静态页面）</h1>
+      <p class="muted">此页面由服务端静态托管。API 基础路径：<code>/api</code> · <a href="/404.html" target="_blank">测试 404 页面</a></p>
 
     <section>
       <h2>健康检查</h2>
@@ -85,6 +96,7 @@
       <pre id="mOut"></pre>
     </section>
 
+    </main>
     <script>
       const $ = (id) => document.getElementById(id);
       const outHealth = $("outHealth");
@@ -136,4 +148,3 @@
     </script>
   </body>
   </html>
-

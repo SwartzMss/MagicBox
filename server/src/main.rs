@@ -58,7 +58,8 @@ fn build_router(state: AppState) -> Router {
         .route("/api/health", get(health))
         .route("/api/tools/json/format", post(json_format))
         .route("/api/tools/hash/md5", post(hash_md5))
-        .route("/api/tools/translate", post(translate));
+        .route("/api/tools/translate", post(translate))
+        .fallback(api_not_found);
 
     let static_dir = ServeDir::new("web/public")
         .fallback(ServeFile::new("web/public/index.html"));
@@ -110,6 +111,8 @@ enum ApiError {
     BadRequest(String),
     #[error("Internal: {0}")]
     Internal(String),
+    #[error("NotFound: {0}")]
+    NotFound(String),
 }
 
 impl IntoResponse for ApiError {
@@ -117,6 +120,7 @@ impl IntoResponse for ApiError {
         let (status, code, msg) = match self {
             ApiError::BadRequest(m) => (StatusCode::BAD_REQUEST, "BadRequest", m),
             ApiError::Internal(m) => (StatusCode::INTERNAL_SERVER_ERROR, "Internal", m),
+            ApiError::NotFound(m) => (StatusCode::NOT_FOUND, "NotFound", m),
         };
         let body = ApiErrorBody {
             code,
@@ -170,6 +174,10 @@ async fn json_format(Json(req): Json<JsonFormatReq>) -> ApiResult<JsonFormatResp
         String::from_utf8(buf).unwrap_or_default()
     };
     Ok(Json(JsonFormatResp { formatted }))
+}
+
+async fn api_not_found() -> Response {
+    ApiError::NotFound("route not found".into()).into_response()
 }
 
 // ----- MD5 -----
