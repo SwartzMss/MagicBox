@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MagicBox — 工具箱</title>
+    <style>
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; padding: 24px; line-height: 1.5; }
+      h1 { margin: 0 0 16px; font-size: 20px; }
+      section { border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+      label { display:block; margin: 8px 0 4px; font-weight: 600; }
+      textarea, input, select { width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; }
+      button { margin-top: 8px; padding: 8px 12px; border: 1px solid #1d4ed8; background: #2563eb; color: #fff; border-radius: 6px; cursor: pointer; }
+      button:disabled { opacity: .6; cursor: not-allowed; }
+      pre { background: #0b1021; color: #e5e7eb; padding: 12px; border-radius: 8px; overflow: auto; }
+      .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+      .muted { color:#6b7280; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <h1>MagicBox 工具箱（本地静态页面）</h1>
+    <p class="muted">此页面由服务端静态托管。API 基础路径：<code>/api</code></p>
+
+    <section>
+      <h2>健康检查</h2>
+      <button id="btnHealth">GET /api/health</button>
+      <pre id="outHealth"></pre>
+    </section>
+
+    <section>
+      <h2>翻译 Translate</h2>
+      <div class="row">
+        <div>
+          <label>输入文本</label>
+          <textarea id="tText" rows="6">你好，世界</textarea>
+        </div>
+        <div>
+          <label>结果</label>
+          <textarea id="tOut" rows="6" readonly></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>sourceLang</label>
+          <select id="tSrc">
+            <option value="auto" selected>auto</option>
+            <option value="zh">zh</option>
+            <option value="en">en</option>
+          </select>
+        </div>
+        <div>
+          <label>targetLang</label>
+          <select id="tTgt">
+            <option value="en" selected>en</option>
+            <option value="zh">zh</option>
+          </select>
+        </div>
+      </div>
+      <button id="btnTranslate">POST /api/tools/translate</button>
+      <div class="muted">需要有效的 DEEPSEEK_API_KEY，且服务器可访问外网</div>
+    </section>
+
+    <section>
+      <h2>JSON 格式化</h2>
+      <div class="row">
+        <div>
+          <label>JSON 输入</label>
+          <textarea id="jIn" rows="6">{"a":1}</textarea>
+        </div>
+        <div>
+          <label>结果</label>
+          <textarea id="jOut" rows="6" readonly></textarea>
+        </div>
+      </div>
+      <label>缩进</label>
+      <input id="jIndent" type="number" value="2" min="0" max="8" />
+      <button id="btnJson">POST /api/tools/json/format</button>
+    </section>
+
+    <section>
+      <h2>MD5</h2>
+      <label>文本</label>
+      <input id="mIn" value="hello" />
+      <button id="btnMd5">POST /api/tools/hash/md5</button>
+      <pre id="mOut"></pre>
+    </section>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const outHealth = $("outHealth");
+      const btnHealth = $("btnHealth");
+      btnHealth.onclick = async () => {
+        outHealth.textContent = "...";
+        try {
+          const res = await fetch('/api/health');
+          outHealth.textContent = await res.text();
+        } catch (e) { outHealth.textContent = String(e); }
+      };
+
+      const btnTranslate = $("btnTranslate");
+      btnTranslate.onclick = async () => {
+        const body = {
+          text: $("tText").value,
+          sourceLang: $("tSrc").value,
+          targetLang: $("tTgt").value,
+        };
+        $("tOut").value = "...";
+        try {
+          const res = await fetch('/api/tools/translate', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+          const data = await res.json();
+          $("tOut").value = data.translation ?? JSON.stringify(data, null, 2);
+        } catch (e) { $("tOut").value = String(e); }
+      };
+
+      const btnJson = $("btnJson");
+      btnJson.onclick = async () => {
+        const body = { json: $("jIn").value, indent: Number($("jIndent").value) };
+        $("jOut").value = "...";
+        try {
+          const res = await fetch('/api/tools/json/format', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+          const data = await res.json();
+          $("jOut").value = data.formatted ?? JSON.stringify(data, null, 2);
+        } catch (e) { $("jOut").value = String(e); }
+      };
+
+      const btnMd5 = $("btnMd5");
+      btnMd5.onclick = async () => {
+        const body = { text: $("mIn").value };
+        $("mOut").textContent = "...";
+        try {
+          const res = await fetch('/api/tools/hash/md5', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+          const data = await res.json();
+          $("mOut").textContent = data.md5 ?? JSON.stringify(data, null, 2);
+        } catch (e) { $("mOut").textContent = String(e); }
+      };
+    </script>
+  </body>
+  </html>
+

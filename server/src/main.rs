@@ -8,7 +8,7 @@ use axum::{
     Json, Router,
 };
 use serde::{Deserialize, Serialize};
-use tower_http::cors::CorsLayer;
+use tower_http::{cors::CorsLayer, services::{ServeDir, ServeFile}};
 use tracing::{error, info};
 use std::sync::Arc;
 
@@ -54,11 +54,18 @@ async fn main() -> anyhow::Result<()> {
 fn build_router(state: AppState) -> Router {
     let cors = CorsLayer::permissive();
 
-    Router::new()
+    let api = Router::new()
         .route("/api/health", get(health))
         .route("/api/tools/json/format", post(json_format))
         .route("/api/tools/hash/md5", post(hash_md5))
-        .route("/api/tools/translate", post(translate))
+        .route("/api/tools/translate", post(translate));
+
+    let static_dir = ServeDir::new("web/public")
+        .fallback(ServeFile::new("web/public/index.html"));
+
+    Router::new()
+        .merge(api)
+        .nest_service("/", static_dir)
         .with_state(state)
         .layer(cors)
 }

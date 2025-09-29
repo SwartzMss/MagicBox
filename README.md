@@ -24,7 +24,9 @@ MagicBox/
 │     ├─ translate/README.md
 │     ├─ json_format/README.md
 │     └─ hash_md5/README.md
-├─ web/                     # 前端（占位，后续接入 Next.js/Vite）
+├─ web/                     # 前端（静态资源与后续框架接入）
+│  ├─ public/               # 静态资源（由后端托管到根路径 "/"）
+│  │  └─ index.html         # 简易工具页（调用 /api/*）
 │  └─ README.md
 └─ docs/
    └─ ROADMAP.md           # 路线图与里程碑
