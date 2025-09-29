@@ -41,7 +41,7 @@ async fn main() -> anyhow::Result<()> {
     let port: u16 = std::env::var("PORT")
         .ok()
         .and_then(|s| s.parse().ok())
-        .unwrap_or(8080);
+        .unwrap_or(18080);
 
     let addr: SocketAddr = ([0, 0, 0, 0], port).into();
     info!(%addr, "MagicBox server starting");

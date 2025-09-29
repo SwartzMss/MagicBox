@@ -18,7 +18,7 @@ Rust 后端服务，基于 Axum/Tokio/Tower，提供多工具 API（翻译［内
 
 见 `.env.example`，常用项：
 
-- `PORT=8080`
+- `PORT=18080`
 - `TRANSLATE_PROVIDER=deepseek`
 - `DEEPSEEK_API_KEY=sk-...`
 - `DEEPSEEK_BASE_URL=https://api.deepseek.com`
