@@ -18,8 +18,6 @@ MagicBox/
 │  ├─ providers/            # 可插拔 Provider（翻译等）
 │  │  ├─ README.md
 │  │  └─ deepseek/README.md # DeepSeek 接入说明
-│  ├─ routes/README.md      # 路由与 API 列表
-│  ├─ services/README.md    # 缓存/日志等横切能力
 │  └─ tools/                # 具体工具的实现与规划
 │     ├─ translate/README.md
 │     ├─ json_format/README.md
@@ -36,7 +34,6 @@ MagicBox/
 
 - 后端总体：`server/README.md`
 - DeepSeek 接入：`server/providers/deepseek/README.md`
-- API 总览：`server/routes/README.md`
 - 工具规划：
   - 翻译：`server/tools/translate/README.md`
   - JSON 格式化：`server/tools/json_format/README.md`

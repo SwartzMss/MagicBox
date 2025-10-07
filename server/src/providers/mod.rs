@@ -1,10 +1,18 @@
 use async_trait::async_trait;
 
 #[derive(Copy, Clone, Debug)]
-pub enum Lang { Zh, En }
+pub enum Lang {
+    Zh,
+    En,
+}
 
 impl Lang {
-    pub fn as_str(&self) -> &'static str { match self { Lang::Zh => "zh", Lang::En => "en" } }
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Lang::Zh => "zh",
+            Lang::En => "en",
+        }
+    }
 }
 
 #[derive(thiserror::Error, Debug)]
@@ -23,8 +31,9 @@ pub trait TranslateProvider: Send + Sync {
         source: Option<Lang>,
         target: Lang,
     ) -> Result<String, ProviderError>;
-    fn name(&self) -> &'static str { "deepseek" }
+    fn name(&self) -> &'static str {
+        "deepseek"
+    }
 }
 
 pub mod deepseek;
-

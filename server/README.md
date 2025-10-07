@@ -45,7 +45,6 @@ Rust 后端服务，基于 Axum/Tokio/Tower，提供多工具 API（翻译［内
 
 详见各模块 README：
 
-- `routes/README.md`：端点与入参/出参
 - `providers/deepseek/README.md`：DeepSeek 调用细节
 - `tools/*/README.md`：各工具实现与测试要点
 
