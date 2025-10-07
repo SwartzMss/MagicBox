@@ -4,7 +4,9 @@
 
 - 中英互译（内置自动语言检测，Provider：DeepSeek，可扩展 OpenAI/DeepL/本地）
 - JSON 格式化/校验
-- MD5 计算
+- 哈希摘要（MD5、SHA-256）
+- Base64 编解码
+- 时间戳转换（Unix ↔ ISO）
 
 静态前端页面托管于后端，包含侧边导航、翻译/JSON/MD5 三个模块，便于快速验证 API。后续计划继续扩展更多工具（如术语表、批量文档处理、加解密等）。
 
@@ -21,7 +23,8 @@ MagicBox/
 │  └─ tools/                # 具体工具的实现与规划
 │     ├─ translate/README.md
 │     ├─ json_format/README.md
-│     └─ hash_md5/README.md
+│     ├─ hash/README.md
+│     └─ timestamp/README.md
 ├─ web/                     # 前端（静态资源与后续框架接入）
 │  ├─ public/               # 静态资源（由后端托管到根路径 "/"）
 │  │  └─ index.html         # 简易工具页（调用 /api/*）
@@ -37,7 +40,8 @@ MagicBox/
 - 工具规划：
   - 翻译：`server/tools/translate/README.md`
   - JSON 格式化：`server/tools/json_format/README.md`
-  - MD5：`server/tools/hash_md5/README.md`
+  - 哈希：`server/tools/hash/README.md`
+  - 时间戳：`server/tools/timestamp/README.md`
 - 路线图：`docs/ROADMAP.md`
 
 ## 下一步

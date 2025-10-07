@@ -33,6 +33,13 @@
       .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
       .translate-split { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
       .translate-options { margin-top: 16px; max-width: 260px; }
+      .panel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+      .panel-options { margin-top: 16px; max-width: 260px; }
+      .panel-options.inline { display: flex; gap: 12px; align-items: center; }
+      .card { border: 1px solid rgba(148, 163, 184, 0.15); border-radius: 12px; padding: 16px; background: rgba(15, 23, 42, 0.55); box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.4); display: grid; gap: 12px; }
+      .card h3 { margin: 0; font-size: 15px; }
+      .timestamp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 16px; }
+      .timestamp-actions { display: flex; gap: 12px; margin-bottom: 12px; }
       .status-pill { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; border-radius: 999px; font-size: 13px; font-weight: 500; }
       .status-pill[data-state="success"] { background: rgba(34, 197, 94, 0.15); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.35); }
       .status-pill[data-state="error"] { background: rgba(248, 113, 113, 0.12); color: #fca5a5; border: 1px solid rgba(248, 113, 113, 0.35); }
@@ -53,7 +60,6 @@
     </header>
     <main>
       <h1>MagicBox 工具台</h1>
-      <p class="muted">静态展示页，由服务端托管。API 基础路径：<code>/api</code></p>
 
       <div class="layout">
         <aside>
@@ -61,7 +67,9 @@
           <ul class="nav-list" role="tablist">
             <li><button class="nav-item" role="tab" data-panel="translate" aria-controls="panel-translate" aria-selected="true">翻译</button></li>
             <li><button class="nav-item" role="tab" data-panel="json" aria-controls="panel-json" aria-selected="false">JSON 格式化</button></li>
-            <li><button class="nav-item" role="tab" data-panel="md5" aria-controls="panel-md5" aria-selected="false">MD5 计算</button></li>
+            <li><button class="nav-item" role="tab" data-panel="hash" aria-controls="panel-hash" aria-selected="false">哈希</button></li>
+            <li><button class="nav-item" role="tab" data-panel="base64" aria-controls="panel-base64" aria-selected="false">Base64</button></li>
+            <li><button class="nav-item" role="tab" data-panel="timestamp" aria-controls="panel-timestamp" aria-selected="false">时间戳</button></li>
           </ul>
         </aside>
 
@@ -110,15 +118,104 @@
             <div id="jStatus" class="status-pill" aria-live="polite"></div>
           </section>
 
-          <section class="panel" id="panel-md5" role="tabpanel" aria-labelledby="panel-md5">
+          <section class="panel" id="panel-hash" role="tabpanel" aria-labelledby="panel-hash">
             <div class="panel-header">
-              <h2>MD5</h2>
-              <small>将任意文本转换为 32 位十六进制摘要</small>
+              <h2>哈希</h2>
+              <small>选择算法生成不可逆摘要</small>
             </div>
-            <label for="mIn">文本</label>
-            <input id="mIn" value="hello" />
-            <button id="btnMd5">计算 MD5</button>
-            <pre id="mOut" aria-live="polite" tabindex="0"></pre>
+            <div class="panel-grid">
+              <div>
+                <label for="hText">输入文本</label>
+                <textarea id="hText" rows="4">hello</textarea>
+              </div>
+              <div>
+                <label for="hOut">结果</label>
+                <textarea id="hOut" rows="4" readonly></textarea>
+              </div>
+            </div>
+            <div class="panel-options inline">
+              <label for="hAlgo">算法</label>
+              <select id="hAlgo">
+                <option value="md5" selected>MD5</option>
+                <option value="sha256">SHA-256</option>
+              </select>
+            </div>
+            <button id="btnHash">计算</button>
+          </section>
+
+          <section class="panel" id="panel-base64" role="tabpanel" aria-labelledby="panel-base64">
+            <div class="panel-header">
+              <h2>Base64</h2>
+              <small>对文本进行编码或解码</small>
+            </div>
+            <div class="panel-grid">
+              <div>
+                <label for="bText">输入文本</label>
+                <textarea id="bText" rows="4">MagicBox</textarea>
+              </div>
+              <div>
+                <label for="bOut">结果</label>
+                <textarea id="bOut" rows="4" readonly></textarea>
+              </div>
+            </div>
+            <div class="panel-options inline">
+              <label for="bMode">操作</label>
+              <select id="bMode">
+                <option value="encode" selected>编码</option>
+                <option value="decode">解码</option>
+              </select>
+            </div>
+            <button id="btnBase64">执行</button>
+          </section>
+
+          <section class="panel" id="panel-timestamp" role="tabpanel" aria-labelledby="panel-timestamp">
+            <div class="panel-header">
+              <h2>时间戳</h2>
+              <small>秒 / 毫秒 与 ISO 时间互转</small>
+            </div>
+            <div class="timestamp-grid">
+              <div class="card">
+                <h3>时间戳 ➜ 时间</h3>
+                <label for="tsUnix">时间戳</label>
+                <input id="tsUnix" placeholder="1700000000 或 1700000000000" />
+                <div class="panel-options inline">
+                  <label for="tsUnit">单位</label>
+                  <select id="tsUnit">
+                    <option value="seconds" selected>秒</option>
+                    <option value="milliseconds">毫秒</option>
+                  </select>
+                </div>
+                <button id="btnTsToTime">转换为时间</button>
+              </div>
+              <div class="card">
+                <h3>日期时间 ➜ 时间戳</h3>
+                <label for="tsLocal">日期时间</label>
+                <input id="tsLocal" type="datetime-local" step="1" />
+                <label for="tsTimezone">时区</label>
+                <select id="tsTimezone">
+                  <option value="local" data-tz="local" selected>系统本地</option>
+                  <option value="UTC" data-tz="UTC">UTC (±00:00)</option>
+                  <option value="+08:00" data-tz="Asia/Shanghai">Asia/Shanghai (+08:00)</option>
+                  <option value="+09:00" data-tz="Asia/Tokyo">Asia/Tokyo (+09:00)</option>
+                  <option value="+05:30" data-tz="Asia/Kolkata">Asia/Kolkata (+05:30)</option>
+                  <option value="+01:00" data-tz="Europe/Berlin">Europe/Berlin (+01:00)</option>
+                  <option value="-05:00" data-tz="America/New_York">America/New_York (-05:00)</option>
+                </select>
+                <button id="btnTsLocalToUnix">转换为时间戳</button>
+                <div class="muted">默认使用当前系统时区，可手动调整</div>
+              </div>
+              <div class="card">
+                <h3>ISO ➜ 时间戳</h3>
+                <label for="tsIso">ISO-8601</label>
+                <input id="tsIso" placeholder="2023-11-14T22:13:20Z" />
+                <button id="btnTsIsoToUnix">转换为时间戳</button>
+              </div>
+            </div>
+            <div class="timestamp-actions">
+              <button id="btnTsNow">获取当前时间</button>
+            </div>
+            <label for="tsOutput">转换结果</label>
+            <textarea id="tsOutput" rows="6" readonly></textarea>
           </section>
         </div>
       </div>
@@ -194,16 +291,142 @@
         }
       };
 
-      const btnMd5 = $("btnMd5");
-      btnMd5.onclick = async () => {
-        const body = { text: $("mIn").value };
-        $("mOut").textContent = "...";
+      const btnHash = $("btnHash");
+      btnHash.onclick = async () => {
+        const body = {
+          text: $("hText").value,
+          algorithm: $("hAlgo").value,
+        };
+        $("hOut").value = "...";
         try {
-          const res = await fetch('/api/tools/hash/md5', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+          const res = await fetch('/api/tools/hash', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
           const data = await res.json();
-          $("mOut").textContent = data.md5 ?? JSON.stringify(data, null, 2);
-        } catch (e) { $("mOut").textContent = String(e); }
+          if (!res.ok) {
+            $("hOut").value = data?.message ?? JSON.stringify(data, null, 2);
+            return;
+          }
+          $("hOut").value = data.digest ?? JSON.stringify(data, null, 2);
+        } catch (e) { $("hOut").value = String(e); }
       };
+
+      const btnBase64 = $("btnBase64");
+      btnBase64.onclick = async () => {
+        const body = {
+          text: $("bText").value,
+          action: $("bMode").value,
+        };
+        $("bOut").value = "...";
+        try {
+          const res = await fetch('/api/tools/base64', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+          const data = await res.json();
+          if (!res.ok) {
+            $("bOut").value = data?.message ?? JSON.stringify(data, null, 2);
+            return;
+          }
+          $("bOut").value = data.result ?? JSON.stringify(data, null, 2);
+        } catch (e) { $("bOut").value = String(e); }
+      };
+
+      const tsOutput = $("tsOutput");
+      const tsLocalInput = $("tsLocal");
+      const tsTimezone = $("tsTimezone");
+      const tsIsoInput = $("tsIso");
+
+      const toLocalInputValue = (date) => {
+        const adjusted = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+        return adjusted.toISOString().slice(0, 19);
+      };
+
+      const normalizeLocalValue = (value) => {
+        if (!value) return value;
+        const replaced = value.replace('T', ' ');
+        return replaced.split(':').length === 2 ? `${replaced}:00` : replaced;
+      };
+
+      const hasExplicitOffset = (value) => /(?:Z|[+\-]\d{2}:?\d{2})$/i.test(value.trim());
+
+      const setTimestampDefaults = () => {
+        if (tsLocalInput) {
+          tsLocalInput.value = toLocalInputValue(new Date());
+        }
+        if (tsIsoInput) {
+          tsIsoInput.value = new Date().toISOString();
+        }
+        if (tsTimezone) {
+          const inferred = Intl.DateTimeFormat().resolvedOptions().timeZone;
+          if (inferred) {
+            const option = Array.from(tsTimezone.options || []).find((opt) => opt.dataset.tz === inferred);
+            tsTimezone.value = option ? option.value : 'local';
+          } else {
+            tsTimezone.value = 'local';
+          }
+        }
+      };
+
+      const callTimestamp = async (body) => {
+        tsOutput.value = "...";
+        try {
+          const res = await fetch('/api/tools/timestamp', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+          const data = await res.json();
+          if (!res.ok) {
+            tsOutput.value = data?.message ?? JSON.stringify(data, null, 2);
+            return;
+          }
+          tsOutput.value = JSON.stringify(data, null, 2);
+        } catch (e) {
+          tsOutput.value = String(e);
+        }
+      };
+
+      $("btnTsNow").onclick = () => {
+        setTimestampDefaults();
+        callTimestamp({ mode: 'now' });
+      };
+
+      $("btnTsToTime").onclick = () => {
+        callTimestamp({
+          mode: 'fromUnix',
+          value: $("tsUnix").value,
+          unit: $("tsUnit").value,
+        });
+      };
+
+      $("btnTsLocalToUnix").onclick = () => {
+        const raw = tsLocalInput ? tsLocalInput.value : '';
+        if (!raw) {
+          tsOutput.value = '请先选择日期时间';
+          return;
+        }
+        const payload = {
+          mode: 'fromIso',
+          value: normalizeLocalValue(raw),
+        };
+        const tzChoice = tsTimezone ? tsTimezone.value : 'local';
+        if (tzChoice && tzChoice !== 'local') {
+          payload.timezone = tzChoice;
+        }
+        callTimestamp(payload);
+      };
+
+      $("btnTsIsoToUnix").onclick = () => {
+        const value = tsIsoInput ? tsIsoInput.value : '';
+        if (!value) {
+          tsOutput.value = '请填写 ISO 时间字符串';
+          return;
+        }
+        const payload = {
+          mode: 'fromIso',
+          value,
+        };
+        const tzChoice = tsTimezone ? tsTimezone.value : 'local';
+        if (!hasExplicitOffset(value) && tzChoice && tzChoice !== 'local') {
+          payload.timezone = tzChoice;
+        }
+        callTimestamp(payload);
+      };
+
+      setTimestampDefaults();
+      callTimestamp({ mode: 'now' });
     </script>
   </body>
   </html>

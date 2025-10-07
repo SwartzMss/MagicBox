@@ -1,6 +1,6 @@
 # MagicBox Server (Rust)
 
-Rust 后端服务，基于 Axum/Tokio/Tower，提供多工具 API（翻译［内置自动检测］、JSON 格式化、MD5 等）。
+Rust 后端服务，基于 Axum/Tokio/Tower，提供多工具 API（翻译［内置自动检测］、JSON 格式化、哈希摘要、Base64 等）。
 
 ## 技术栈与依赖
 
@@ -35,8 +35,8 @@ Rust 后端服务，基于 Axum/Tokio/Tower，提供多工具 API（翻译［内
 - `providers/`：翻译 Provider 抽象与实现（DeepSeek 等）
 - `routes/`：路由树与各工具 handler
   - `routes/health.rs`：健康检查
-  - `routes/tools/`：翻译、JSON、MD5 等工具接口
-- `tools/`：额外设计文档（translate/json_format/hash_md5）
+  - `routes/tools/`：翻译、JSON、哈希、Base64、时间戳等工具接口
+- `tools/`：额外设计文档（translate/json_format/hash）
 
 ## API 约定
 
@@ -44,7 +44,9 @@ Rust 后端服务，基于 Axum/Tokio/Tower，提供多工具 API（翻译［内
 - 健康检查：`GET /api/health -> { ok: true }`
 - 翻译：`POST /api/tools/translate`
 - JSON 格式化：`POST /api/tools/json/format`
-- MD5：`POST /api/tools/hash/md5`
+- 哈希摘要：`POST /api/tools/hash`
+- Base64：`POST /api/tools/base64`
+- 时间戳：`POST /api/tools/timestamp`
 
 详见各模块 README：
 
