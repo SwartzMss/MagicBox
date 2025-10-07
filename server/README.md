@@ -28,12 +28,15 @@ Rust 后端服务，基于 Axum/Tokio/Tower，提供多工具 API（翻译［内
 - `LOG_LEVEL=info`
 - `ENABLE_CORS=1`
 
-## 目录（规划）
+## 目录概览
 
-- `providers/`：Provider 抽象与实现（DeepSeek 等）
-- `routes/`：路由与 API handler 文档
-- `services/`：缓存、日志等横切能力
-- `tools/`：工具模块规划（translate/json_format/hash_md5）
+- `app.rs`：`AppState`、Provider 与缓存装配
+- `error.rs`：统一的 API 错误模型
+- `providers/`：翻译 Provider 抽象与实现（DeepSeek 等）
+- `routes/`：路由树与各工具 handler
+  - `routes/health.rs`：健康检查
+  - `routes/tools/`：翻译、JSON、MD5 等工具接口
+- `tools/`：额外设计文档（translate/json_format/hash_md5）
 
 ## API 约定
 
@@ -48,19 +51,17 @@ Rust 后端服务，基于 Axum/Tokio/Tower，提供多工具 API（翻译［内
 - `providers/deepseek/README.md`：DeepSeek 调用细节
 - `tools/*/README.md`：各工具实现与测试要点
 
-## 实现建议（分阶段）
+## 开发流程建议
 
-1. 搭建 Axum 骨架：路由树、AppState、CORS、日志
-2. 翻译模块：内置自动语言检测（启发式/模型可选）、缓存与重试（DeepSeek Provider）
-3. JSON 格式化、MD5 工具端点
-4. 统一错误模型与追踪日志
-5. 预留扩展：术语表、批量任务、文档解析器
+1. 维护核心模块解耦：Provider、路由、工具逻辑分离
+2. 扩展翻译能力：更多语言、Provider 可配置、异常透明化
+3. 为工具接口补充单元/集成测试，校验缓存与错误分支
+4. 规划批处理、术语表等新工具，保持路由模块化结构
 
-## 运行（占位说明）
-
-本仓库当前仅包含设计文档与目录规划。落地代码后：
+## 运行
 
 ```bash
+cd server
 cp .env.example .env
-cargo run # in server/
+cargo run
 ```
