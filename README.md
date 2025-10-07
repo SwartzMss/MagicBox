@@ -1,12 +1,12 @@
 # MagicBox
 
-多功能在线工具服务（百宝箱）。当前规划以 Rust 后端为核心，优先支持：
+多功能在线工具服务（百宝箱）。目前以 Rust 后端为核心，已提供：
 
 - 中英互译（内置自动语言检测，Provider：DeepSeek，可扩展 OpenAI/DeepL/本地）
-- JSON 格式化
+- JSON 格式化/校验
 - MD5 计算
 
-后续将持续扩展更多工具（如术语表、批量文档处理、加解密等）。
+静态前端页面托管于后端，包含侧边导航、翻译/JSON/MD5 三个模块，便于快速验证 API。后续计划继续扩展更多工具（如术语表、批量文档处理、加解密等）。
 
 ## Monorepo 目录规划
 
@@ -15,12 +15,12 @@ MagicBox/
 ├─ server/                  # Rust 后端（Axum/Tokio/Tower）
 │  ├─ .env.example          # 环境变量示例
 │  ├─ README.md             # 后端总体设计与运行说明
-│  ├─ providers/            # 可插拔 Provider（翻译 等）
+│  ├─ providers/            # 可插拔 Provider（翻译等）
 │  │  ├─ README.md
 │  │  └─ deepseek/README.md # DeepSeek 接入说明
 │  ├─ routes/README.md      # 路由与 API 列表
-│  ├─ services/README.md    # 缓存/日志 等横切能力
-│  └─ tools/                # 具体工具的实现规划
+│  ├─ services/README.md    # 缓存/日志等横切能力
+│  └─ tools/                # 具体工具的实现与规划
 │     ├─ translate/README.md
 │     ├─ json_format/README.md
 │     └─ hash_md5/README.md
@@ -31,8 +31,6 @@ MagicBox/
 └─ docs/
    └─ ROADMAP.md           # 路线图与里程碑
 ```
-
-> 说明：本次提交仅包含目录规划与各子项目 README 设计文档，便于后续按模块逐步落地代码。
 
 ## 快速导览
 
@@ -47,7 +45,7 @@ MagicBox/
 
 ## 下一步
 
-1) 在 `server/` 按 READMEs 初始化 Axum 项目骨架与模块目录
-2) 优先实现翻译（内置自动检测，DeepSeek Provider），随后 JSON/MD5
-3) 接入缓存与日志
-4) 规划并实现前端界面（左右对照、自动检测标签、复制/交换/清空）
+1) 增加集成与单元测试（尤其是缓存/错误处理）
+2) 丰富翻译配置（模型可切换、更多目标语言、异常可视化）
+3) 扩展更多工具（术语表、批量处理等），保持前端导航一致
+4) 规划前端框架版（如 React/Svelte），与当前静态页并存以便渐进迁移

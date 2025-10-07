@@ -10,7 +10,7 @@ use axum::{
 use serde::{Deserialize, Serialize};
 use tower_http::{cors::CorsLayer, services::{ServeDir, ServeFile}};
 use tracing::{error, info};
-use std::sync::Arc;
+use std::{path::PathBuf, sync::Arc};
 
 mod providers;
 use providers::{Lang, TranslateProvider};
@@ -61,8 +61,11 @@ fn build_router(state: AppState) -> Router {
         .route("/api/tools/translate", post(translate))
         .fallback(api_not_found);
 
-    let static_dir = ServeDir::new("web/public")
-        .fallback(ServeFile::new("web/public/index.html"));
+    let static_dir_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../web/public");
+    let index_file = static_dir_path.join("index.html");
+
+    let static_dir = ServeDir::new(static_dir_path)
+        .fallback(ServeFile::new(index_file));
 
     Router::new()
         .merge(api)

@@ -5,23 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MagicBox — 工具箱</title>
     <style>
-      :root { color-scheme: light dark; }
-      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; line-height: 1.5; background: #0b1021; color: #e5e7eb; }
-      header { position: sticky; top: 0; background: #0f172a; border-bottom: 1px solid #1f2937; padding: 12px 20px; z-index: 10; }
-      header .brand { font-weight: 700; }
-      main { padding: 20px; max-width: 1100px; margin: 0 auto; }
-      h1 { margin: 0 0 16px; font-size: 20px; }
-      section { border: 1px solid #1f2937; border-radius: 10px; padding: 16px; margin-bottom: 16px; background: #0f172a; box-shadow: 0 5px 20px rgba(0,0,0,.25); }
-      label { display:block; margin: 8px 0 4px; font-weight: 600; }
-      textarea, input, select { width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #334155; background: #0b1226; color: #e5e7eb; border-radius: 8px; font-family: inherit; }
-      button { margin-top: 8px; padding: 8px 12px; border: 1px solid #1d4ed8; background: #2563eb; color: #fff; border-radius: 8px; cursor: pointer; }
+      :root { color-scheme: dark; }
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; line-height: 1.6; background: #0b1021; color: #e5e7eb; min-height: 100vh; }
+      header { position: sticky; top: 0; background: rgba(15, 23, 42, 0.92); border-bottom: 1px solid #1f2937; padding: 12px 24px; backdrop-filter: blur(6px); z-index: 10; }
+      header .brand { font-weight: 700; letter-spacing: 0.05em; }
+      main { max-width: 1200px; margin: 0 auto; padding: 24px; }
+      h1 { margin: 0 0 12px; font-size: 22px; }
+      h2 { margin: 0 0 16px; font-size: 18px; }
+      .muted { color:#94a3b8; font-size: 13px; }
+      .layout { display: grid; grid-template-columns: 240px 1fr; gap: 24px; align-items: start; }
+      aside { border: 1px solid #1f2937; border-radius: 14px; background: linear-gradient(160deg, rgba(15, 23, 42, 0.95), rgba(17, 24, 39, 0.8)); box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.8); padding: 18px; position: sticky; top: 96px; max-height: calc(100vh - 120px); overflow: auto; }
+      .nav-title { font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; margin-bottom: 12px; }
+      .nav-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+      .nav-item { border: 1px solid transparent; border-radius: 10px; background: rgba(148, 163, 184, 0.05); color: inherit; padding: 10px 12px; text-align: left; font: inherit; cursor: pointer; transition: border-color 120ms, background 120ms; }
+      .nav-item:hover { border-color: rgba(59, 130, 246, 0.35); }
+      .nav-item[aria-selected="true"] { border-color: #2563eb; background: rgba(37, 99, 235, 0.15); box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.4); }
+      .panels { display: grid; gap: 18px; }
+      .panel { display: none; border: 1px solid rgba(148, 163, 184, 0.12); border-radius: 14px; padding: 22px 24px; background: rgba(15, 23, 42, 0.88); box-shadow: 0 30px 60px -40px rgba(37, 99, 235, 0.65); }
+      .panel.is-active { display: block; animation: fade-in 160ms ease-in; }
+      label { display:block; margin: 12px 0 6px; font-weight: 600; color: #e2e8f0; }
+      textarea, input, select { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #334155; background: #0b1226; color: #e5e7eb; border-radius: 10px; font-family: inherit; transition: border-color 120ms, box-shadow 120ms; }
+      textarea:focus, input:focus, select:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.4); }
+      button { margin-top: 12px; padding: 10px 16px; border: 1px solid #1d4ed8; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff; border-radius: 999px; cursor: pointer; font-weight: 600; letter-spacing: 0.02em; }
       button:disabled { opacity: .6; cursor: not-allowed; }
-      pre { background: #0b1021; color: #e5e7eb; padding: 12px; border-radius: 8px; overflow: auto; }
-      .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-      .muted { color:#9ca3af; font-size: 12px; }
-      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+      pre { background: #0b1021; color: #e5e7eb; padding: 14px; border-radius: 10px; border: 1px solid rgba(30, 41, 59, 0.6); overflow: auto; }
+      code { background: rgba(15, 23, 42, 0.5); padding: 0 6px; border-radius: 6px; }
+      .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+      .translate-split { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+      .translate-options { margin-top: 16px; max-width: 260px; }
+      .status-pill { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; border-radius: 999px; font-size: 13px; font-weight: 500; }
+      .status-pill[data-state="success"] { background: rgba(34, 197, 94, 0.15); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.35); }
+      .status-pill[data-state="error"] { background: rgba(248, 113, 113, 0.12); color: #fca5a5; border: 1px solid rgba(248, 113, 113, 0.35); }
+      .panel-header { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 16px; }
+      .panel-header small { color: #64748b; font-size: 12px; }
       a { color: #93c5fd; text-decoration: none; }
       a:hover { text-decoration: underline; }
+      @media (max-width: 960px) {
+        .layout { grid-template-columns: 1fr; }
+        aside { position: static; max-height: none; }
+      }
+      @keyframes fade-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
     </style>
   </head>
   <body>
@@ -29,91 +52,101 @@
       <div class="brand">MagicBox</div>
     </header>
     <main>
-      <h1>工具箱（静态页面）</h1>
-      <p class="muted">此页面由服务端静态托管。API 基础路径：<code>/api</code> · <a href="/404.html" target="_blank">测试 404 页面</a></p>
+      <h1>MagicBox 工具台</h1>
+      <p class="muted">静态展示页，由服务端托管。API 基础路径：<code>/api</code></p>
 
-    <section>
-      <h2>健康检查</h2>
-      <button id="btnHealth">GET /api/health</button>
-      <pre id="outHealth"></pre>
-    </section>
+      <div class="layout">
+        <aside>
+          <div class="nav-title">工具导航</div>
+          <ul class="nav-list" role="tablist">
+            <li><button class="nav-item" role="tab" data-panel="translate" aria-controls="panel-translate" aria-selected="true">翻译</button></li>
+            <li><button class="nav-item" role="tab" data-panel="json" aria-controls="panel-json" aria-selected="false">JSON 格式化</button></li>
+            <li><button class="nav-item" role="tab" data-panel="md5" aria-controls="panel-md5" aria-selected="false">MD5 计算</button></li>
+          </ul>
+        </aside>
 
-    <section>
-      <h2>翻译 Translate</h2>
-      <div class="row">
-        <div>
-          <label>输入文本</label>
-          <textarea id="tText" rows="6">你好，世界</textarea>
-        </div>
-        <div>
-          <label>结果</label>
-          <textarea id="tOut" rows="6" readonly></textarea>
+        <div class="panels">
+          <section class="panel is-active" id="panel-translate" role="tabpanel" aria-labelledby="panel-translate">
+            <div class="panel-header">
+              <h2>翻译</h2>
+              <small>自动检测输入语种，只需选择目标语言</small>
+            </div>
+            <div class="row translate-split">
+              <div>
+                <label for="tText">输入文本</label>
+                <textarea id="tText" rows="6">你好，世界</textarea>
+              </div>
+              <div>
+                <label for="tOut">翻译结果</label>
+                <textarea id="tOut" rows="6" readonly></textarea>
+              </div>
+            </div>
+            <div class="translate-options">
+              <label for="tTgt">目标语言</label>
+              <select id="tTgt">
+                <option value="en" selected>英文</option>
+                <option value="zh">中文</option>
+              </select>
+            </div>
+            <button id="btnTranslate">翻译</button>
+          </section>
+
+          <section class="panel" id="panel-json" role="tabpanel" aria-labelledby="panel-json">
+            <div class="panel-header">
+              <h2>JSON 格式化</h2>
+              <small>粘贴原始 JSON，一键输出标准格式</small>
+            </div>
+            <div class="row">
+              <div>
+                <label for="jIn">JSON 输入</label>
+                <textarea id="jIn" rows="6">{"a":1}</textarea>
+              </div>
+              <div>
+                <label for="jOut">结果</label>
+                <textarea id="jOut" rows="6" readonly></textarea>
+              </div>
+            </div>
+            <button id="btnJson">格式化</button>
+            <div id="jStatus" class="status-pill" aria-live="polite"></div>
+          </section>
+
+          <section class="panel" id="panel-md5" role="tabpanel" aria-labelledby="panel-md5">
+            <div class="panel-header">
+              <h2>MD5</h2>
+              <small>将任意文本转换为 32 位十六进制摘要</small>
+            </div>
+            <label for="mIn">文本</label>
+            <input id="mIn" value="hello" />
+            <button id="btnMd5">计算 MD5</button>
+            <pre id="mOut" aria-live="polite" tabindex="0"></pre>
+          </section>
         </div>
       </div>
-      <div class="row">
-        <div>
-          <label>sourceLang</label>
-          <select id="tSrc">
-            <option value="auto" selected>auto</option>
-            <option value="zh">zh</option>
-            <option value="en">en</option>
-          </select>
-        </div>
-        <div>
-          <label>targetLang</label>
-          <select id="tTgt">
-            <option value="en" selected>en</option>
-            <option value="zh">zh</option>
-          </select>
-        </div>
-      </div>
-      <button id="btnTranslate">POST /api/tools/translate</button>
-      <div class="muted">需要有效的 DEEPSEEK_API_KEY，且服务器可访问外网</div>
-    </section>
-
-    <section>
-      <h2>JSON 格式化</h2>
-      <div class="row">
-        <div>
-          <label>JSON 输入</label>
-          <textarea id="jIn" rows="6">{"a":1}</textarea>
-        </div>
-        <div>
-          <label>结果</label>
-          <textarea id="jOut" rows="6" readonly></textarea>
-        </div>
-      </div>
-      <label>缩进</label>
-      <input id="jIndent" type="number" value="2" min="0" max="8" />
-      <button id="btnJson">POST /api/tools/json/format</button>
-    </section>
-
-    <section>
-      <h2>MD5</h2>
-      <label>文本</label>
-      <input id="mIn" value="hello" />
-      <button id="btnMd5">POST /api/tools/hash/md5</button>
-      <pre id="mOut"></pre>
-    </section>
-
     </main>
     <script>
       const $ = (id) => document.getElementById(id);
-      const outHealth = $("outHealth");
-      const btnHealth = $("btnHealth");
-      btnHealth.onclick = async () => {
-        outHealth.textContent = "...";
-        try {
-          const res = await fetch('/api/health');
-          outHealth.textContent = await res.text();
-        } catch (e) { outHealth.textContent = String(e); }
+      const navItems = Array.from(document.querySelectorAll('.nav-item'));
+      const panels = Array.from(document.querySelectorAll('.panel'));
+
+      const setActive = (panelId) => {
+        navItems.forEach((btn) => btn.setAttribute('aria-selected', String(btn.dataset.panel === panelId)));
+        panels.forEach((panel) => panel.classList.toggle('is-active', panel.id === `panel-${panelId}`));
       };
+
+      navItems.forEach((btn) => {
+        btn.addEventListener('click', () => setActive(btn.dataset.panel));
+        btn.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            setActive(btn.dataset.panel);
+          }
+        });
+      });
 
       const btnTranslate = $("btnTranslate");
       btnTranslate.onclick = async () => {
         const body = {
           text: $("tText").value,
-          sourceLang: $("tSrc").value,
           targetLang: $("tTgt").value,
         };
         $("tOut").value = "...";
@@ -124,15 +157,41 @@
         } catch (e) { $("tOut").value = String(e); }
       };
 
+      const jsonStatus = document.getElementById('jStatus');
+      const setJsonStatus = (state, message = '') => {
+        if (!jsonStatus) return;
+        jsonStatus.textContent = message;
+        if (state) {
+          jsonStatus.dataset.state = state;
+          jsonStatus.style.display = 'inline-flex';
+        } else {
+          delete jsonStatus.dataset.state;
+          jsonStatus.style.display = 'none';
+        }
+      };
+
+      setJsonStatus(null);
+
       const btnJson = $("btnJson");
       btnJson.onclick = async () => {
-        const body = { json: $("jIn").value, indent: Number($("jIndent").value) };
+        const body = { json: $("jIn").value };
         $("jOut").value = "...";
+        setJsonStatus(null);
         try {
           const res = await fetch('/api/tools/json/format', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
           const data = await res.json();
+          if (!res.ok) {
+            const message = data?.message || `格式化失败（${res.status}）`;
+            setJsonStatus('error', message);
+            $("jOut").value = JSON.stringify(data, null, 2);
+            return;
+          }
           $("jOut").value = data.formatted ?? JSON.stringify(data, null, 2);
-        } catch (e) { $("jOut").value = String(e); }
+          setJsonStatus('success', '格式正确');
+        } catch (e) {
+          $("jOut").value = String(e);
+          setJsonStatus('error', '请求失败，请稍后再试');
+        }
       };
 
       const btnMd5 = $("btnMd5");
